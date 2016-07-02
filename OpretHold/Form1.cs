@@ -614,32 +614,46 @@ namespace OpretHold
 
 
 
-            DataTable tbl2 = new DataTable();
-            DataTable tblA = tbl4;
+            DataTable TabelTilTraenereLocal = new DataTable();
+            DataTable tblA = TabelTilTraenereGlobal;//.Tables[0];
             DataRow[] dr2 = tblA.Select("Holdkode = '" + Holdkode.Text + "'");
             if (dr2.Length > 0)
             {
-                tbl2 = dr2.CopyToDataTable();
+                TabelTilTraenereLocal = dr2.CopyToDataTable();
             }
             DataSet SelectedData2 = new DataSet();
-            SelectedData2.Tables.Add(tbl2);
+            SelectedData2.Tables.Add(TabelTilTraenereLocal);
             dataGridView5.DataSource = SelectedData2.Tables[0];
+
+
+
+
+            DataTable TabelTilLokaleHoldFordeling = new DataTable();
+            DataTable tblB = LokaleHoldFordelingGlobal;//.Tables[0];
+            DataRow[] dr3 = tblB.Select("Holdkode = '" + Holdkode.Text + "'");
+            if (dr3.Length > 0)
+            {
+                TabelTilLokaleHoldFordeling = dr3.CopyToDataTable();
+            }
+            DataSet SelectedData3 = new DataSet();
+            SelectedData3.Tables.Add(TabelTilLokaleHoldFordeling);
+            dataGridView4.DataSource = SelectedData3.Tables[0];
 
 
 
 
             /*
             DataTable table2 = Tnr.Tables[0];
-            DataTable tbl2 = new DataTable();
+            DataTable TabelTilTraenere = new DataTable();
             DataTable tbl3 = Tnr.Tables[0];
             DataRow[] dr2 = tbl3.Select("Holdkode = '" + Holdkode.Text + "'");
             if (dr2.Length > 0)
             {
-                tbl2 = dr2.CopyToDataTable();
+                TabelTilTraenere = dr2.CopyToDataTable();
             }
  
             DataSet SelectedData2 = new DataSet();
-            SelectedData2.Tables.Add(tbl2);
+            SelectedData2.Tables.Add(TabelTilTraenere);
             dataGridView2.DataSource = SelectedData2.Tables[0];
         */
         }
@@ -673,9 +687,10 @@ namespace OpretHold
             }
         }
 
-
+        DataTable LokaleHoldFordelingGlobal = new DataTable();
+        DataTable TabelTilTraenereGlobal = new DataTable();
         private BindingSource bindingSource1 = new BindingSource();
-        DataTable tbl2 = new DataTable();
+        DataTable TabelTilTraenere = new DataTable();
         DataTable tbl4 = new DataTable();
         void openfile()
         {
@@ -695,17 +710,9 @@ namespace OpretHold
             
             xlWorkSheet = (Microsoft.Office.Interop.Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
 
-
-
-            range = xlWorkSheet.UsedRange;
-
-         
+            range = xlWorkSheet.UsedRange;     
             xlWorkSheet = (Microsoft.Office.Interop.Excel.Worksheet)xlWorkBook.Worksheets.get_Item(2);
-
-
             range = xlWorkSheet.UsedRange;
-
-
             xlWorkBook.Close(true, null, null);
             xlApp.Quit();
 
@@ -764,48 +771,71 @@ namespace OpretHold
             DataSet SelectedData = new DataSet();
             SelectedData.Tables.Add(tbl1);
             dataGridView1.DataSource = SelectedData.Tables[0];
+            dataGridView1.Columns[0].DefaultCellStyle = new DataGridViewCellStyle { Format = "hh:mm:ss" };
 
+          //  dataGridView1.Rows[5].Cells[3].Value = Convert.ToDateTime("hh:mm:ss");
             //----------------------------------------------------
 
             DataTable HoldTemp5 = LokaleHoldFordeling.Tables[0];
 
-            
-            DataTable tbl3 = LokaleHoldFordeling.Tables[0];
+            TabelTilTraenereGlobal = LokaleHoldFordeling.Tables[0].Copy();
+            TabelTilTraenereGlobal.Columns.Remove("niveau");
+            TabelTilTraenereGlobal.Columns.Remove("gebyr");
+            TabelTilTraenereGlobal.Columns.Remove("Ej stud");
+            //  TabelTilTraenere.Columns.Remove("tnr");
+            TabelTilTraenereGlobal.Columns.Remove("holdnavn");
+            TabelTilTraenereGlobal.Columns.Remove("starttid");
+            TabelTilTraenereGlobal.Columns.Remove("sluttid");
+            TabelTilTraenereGlobal.Columns.Remove("startdato");
+            TabelTilTraenereGlobal.Columns.Remove("slutdato");
+            TabelTilTraenereGlobal.Columns.Remove("lokalekode");
+            TabelTilTraenereGlobal.Columns.Remove("ugedag");
+            TabelTilTraenereGlobal.Columns.Remove("periode");
+            TabelTilTraenereGlobal.Columns.Remove("bemærkninger");
+
+
+
+
+
+
+
+            DataTable tbl3 = LokaleHoldFordeling.Tables[0].Copy();
             DataRow[] dr2 = tbl3.Select("Holdkode = '" + Holdkode.Text + "'");
             if (dr2.Length > 0)
             {
-                tbl2 = dr2.CopyToDataTable();
+                TabelTilTraenere = dr2.CopyToDataTable();
             }
             /*       var result3 = HoldTemp4.AsEnumerable()
                                                        .Where((row, index) => index == inc)
                                                        .CopyToDataTable();
                    DataSet SelectedData5 = new DataSet();
                    SelectedData5.Tables.Add(result3);*/
-          //  tbl2.Columns.Remove("trænernavn");
-            tbl2.Columns.Remove("niveau");
-            tbl2.Columns.Remove("gebyr");
-            tbl2.Columns.Remove("Ej stud");
-          //  tbl2.Columns.Remove("tnr");
-            tbl2.Columns.Remove("holdnavn");
-            tbl2.Columns.Remove("starttid");
-            tbl2.Columns.Remove("sluttid");
-            tbl2.Columns.Remove("startdato");
-            tbl2.Columns.Remove("slutdato");
-            tbl2.Columns.Remove("lokalekode");
-            tbl2.Columns.Remove("ugedag");
-            tbl2.Columns.Remove("periode");
-            tbl2.Columns.Remove("bemærkninger");
-               dataGridView5.DataSource = tbl2;
+          //  TabelTilTraenere.Columns.Remove("trænernavn");
+            TabelTilTraenere.Columns.Remove("niveau");
+            TabelTilTraenere.Columns.Remove("gebyr");
+            TabelTilTraenere.Columns.Remove("Ej stud");
+          //  TabelTilTraenere.Columns.Remove("tnr");
+            TabelTilTraenere.Columns.Remove("holdnavn");
+            TabelTilTraenere.Columns.Remove("starttid");
+            TabelTilTraenere.Columns.Remove("sluttid");
+            TabelTilTraenere.Columns.Remove("startdato");
+            TabelTilTraenere.Columns.Remove("slutdato");
+            TabelTilTraenere.Columns.Remove("lokalekode");
+            TabelTilTraenere.Columns.Remove("ugedag");
+            TabelTilTraenere.Columns.Remove("periode");
+            TabelTilTraenere.Columns.Remove("bemærkninger");
+               dataGridView5.DataSource = TabelTilTraenere;
             //        DataRow DRrow2 = SelectedData4.Tables[0].Rows[0];
 
 //----------------------------------------
 
 
                //Her fylder jeg data ind i tabellen til lokaleholdfordeling
-               DataTable HoldTemp4 = LokaleHoldFordeling.Tables[0];
+               DataTable HoldTemp4 = LokaleHoldFordeling.Tables[0].Copy();
 
                
-               DataTable tbl5 = LokaleHoldFordeling.Tables[0];
+               DataTable tbl5 = LokaleHoldFordeling.Tables[0].Copy();
+
                DataRow[] dr4 = tbl5.Select("Holdkode = '" + Holdkode.Text + "'");
                if (dr4.Length > 0)
                {
@@ -817,18 +847,29 @@ namespace OpretHold
                                                           .CopyToDataTable();
                       DataSet SelectedData5 = new DataSet();
                       SelectedData5.Tables.Add(result3);*/
+
+               LokaleHoldFordelingGlobal = LokaleHoldFordeling.Tables[0].Copy();
                tbl4.Columns.Remove("trænernavn");
                tbl4.Columns.Remove("niveau");
                tbl4.Columns.Remove("gebyr");
                tbl4.Columns.Remove("Ej stud");
                tbl4.Columns.Remove("tnr");
                tbl4.Columns.Remove("holdnavn");
-               dataGridView4.DataSource = tbl4;
-
                tbl4.Columns.Add("VisSomNr", typeof(System.Int32));
                tbl4.Columns.Add("Timefaktor", typeof(System.Int32));
                tbl4.Columns.Add("Fritraening");
 
+               LokaleHoldFordelingGlobal.Columns.Remove("trænernavn");
+               LokaleHoldFordelingGlobal.Columns.Remove("niveau");
+               LokaleHoldFordelingGlobal.Columns.Remove("gebyr");
+               LokaleHoldFordelingGlobal.Columns.Remove("Ej stud");
+               LokaleHoldFordelingGlobal.Columns.Remove("tnr");
+               LokaleHoldFordelingGlobal.Columns.Remove("holdnavn");
+               LokaleHoldFordelingGlobal.Columns.Add("VisSomNr", typeof(System.Int32));
+               LokaleHoldFordelingGlobal.Columns.Add("Timefaktor", typeof(System.Int32));
+               LokaleHoldFordelingGlobal.Columns.Add("Fritraening");
+
+               dataGridView4.DataSource = tbl4;
 
 
             /*
@@ -851,14 +892,14 @@ namespace OpretHold
 
             DataTable table2 = Tnr.Tables[0];
             DataTable tbl3 = Tnr.Tables[0];
-            DataTable tbl2 = new DataTable();
+            DataTable TabelTilTraenere = new DataTable();
             DataRow[] dr2 = tbl3.Select("Holdkode = '" + Holdkode.Text + "'");
             if (dr2.Length > 0)
             {
-                tbl2 = dr2.CopyToDataTable();
+                TabelTilTraenere = dr2.CopyToDataTable();
             }
             DataSet SelectedData2 = new DataSet();
-            SelectedData2.Tables.Add(tbl2);
+            SelectedData2.Tables.Add(TabelTilTraenere);
             dataGridView2.DataSource = SelectedData2.Tables[0];
 */
             firstTeam();
