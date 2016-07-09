@@ -917,6 +917,38 @@ namespace OpretHold
                 row2["Bemærkninger"] = row2["Bemærkninger"].ToString().TrimStart();
                 row2["Tnr"] = row2["Tnr"].ToString().TrimEnd();
                 row2["Tnr"] = row2["Tnr"].ToString().TrimStart();
+
+
+                //--------------------------- Tjek om træner eksisterer start
+                    char[] delimiterChars = { ' ', ',', '.', ':', '\t','/' };
+                    
+                    string[] tnrary = (row2["tnr"].ToString()).Split(delimiterChars);
+                    int b = tnrary.Length;
+
+                    SqlConnection conn10 = new SqlConnection("server=sql.metalogic.dk; database=USGKontor;Persist Security Info=True;User ID=usgkontor;Password=1hihh1hihh");
+                    conn10.Open();
+                    foreach (string t in tnrary)
+                    {
+
+                        SqlCommand commandTjekdata = new SqlCommand("SELECT nr FROM USGkontor.Træner WHERE nr = '" + t.ToString() + "' ", conn10);
+                        using (SqlDataReader reader3 = commandTjekdata.ExecuteReader())
+                        {
+
+                            if (reader3.Read())
+                            { }
+                            else
+                            {
+                                MessageBox.Show("Der er fejl i træner for " + t.ToString());
+                            }
+                        }
+                    }
+                    conn10.Close();
+                //--------------------------- Tjek om træner eksisterer slut
+
+
+
+
+
             }
 
 
@@ -1484,6 +1516,10 @@ namespace OpretHold
             foreach (DataGridViewRow row in dataGridView5.Rows)
             {
 
+
+
+
+
                 if (row.Cells["HoldKode"].Value == null)
                 { }
                 else
@@ -1494,6 +1530,23 @@ namespace OpretHold
 
                     foreach (string t in tnrary)
                     {
+
+
+//--------------------------- Tjek om træner eksisterer start
+
+                        SqlCommand commandTjekdata = new SqlCommand("SELECT nr FROM USGkontor.Træner WHERE nr = '" + t.ToString() + "' ", sqlConnection1);
+                            using (SqlDataReader reader3 = commandTjekdata.ExecuteReader())
+                            {
+
+                                if (reader3.Read())
+                                { }
+                                else
+                                {
+                                    MessageBox.Show("Der er fejl i træner for " + t.ToString());
+                                }
+                            }
+                        
+//--------------------------- Tjek om træner eksisterer slut
 
                         SqlCommand command2 = new SqlCommand("SELECT HID AS HID FROM USGkontor.trænerhold Where HID = '" + HID.Text + "' AND nr = '" + t + "' ", sqlConnection1);
                         using (SqlDataReader reader2 = command2.ExecuteReader())
