@@ -42,14 +42,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="OpretHold.exe" size="41960">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="OpretHold.exe" size="53736">
       <assemblyIdentity name="OpretHold" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>Nae1bTdAkUeTRKrhAlYAMIVyNCvymsJ9VupUXalYRwc=</dsig:DigestValue>
+        <dsig:DigestValue>l4E55YEv0/P7P/GL9tJazg4R8Ad1/GdFmFqREF0+Ul8=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

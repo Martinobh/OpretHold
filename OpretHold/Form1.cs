@@ -16,6 +16,7 @@ using Microsoft.Office;
 using Microsoft.Office.Interop;
 using System.Data.OleDb;
 using System.Web;
+using System.Globalization;
 
 
 
@@ -67,6 +68,8 @@ namespace OpretHold
             SelectedData4.Tables.Add(result2);
 
             DataRow DRrow2 = SelectedData4.Tables[0].Rows[0];
+
+
 
 
      //        DataRow DRrow2 = SelectedData4.Tables[0].Rows[0];
@@ -124,10 +127,92 @@ namespace OpretHold
             holdType.Text = DRrow["Holdtype"].ToString();
             holdtypeID.Text = DRrow["HoldtypeID"].ToString();
             Sportsgren.Text = DRrow["sportsgren"].ToString();
+
             Budgetteret.Text = DRrow["budgetteret"].ToString();
             VID.Text = DRrow["VID"].ToString();
             TraenerePerGang.Text = DRrow["trænere pr gang"].ToString();
             AntTraeninger.Text = DRrow["antal træninger"].ToString();
+
+
+             DataRow[] dr2 = SportsgrenGlobal.Tables[0].Select("Sportsgren = '" + Sportsgren.Text + "'");
+            if (dr2.Length > 0)
+            {
+                SportsGrenID.Text = dr2[0]["Id"].ToString();
+            }
+
+
+            SqlConnection conn = new SqlConnection("server=sql.metalogic.dk; database=USGKontor;Persist Security Info=True;User ID=usgkontor;Password=1hihh1hihh");
+            conn.Open();
+
+            SqlCommand command = new SqlCommand("SELECT HID AS HID FROM USGkontor.Hold Where Holdkode = '" + Holdkode.Text + "' AND VID = '" + VID.Text + "' ", conn);
+            using (SqlDataReader reader2 = command.ExecuteReader())
+            {
+                if (reader2.Read())
+                {
+                    //     Console.WriteLine(String.Format("{0}", reader2["HID"]));
+                    HID.Text = reader2["HID"].ToString();
+                    lb_IndIHold.Text = "Er indsat";
+                }
+                else
+                {
+                    lb_IndIHold.Text = "Mangler";
+                }
+            }
+
+            SqlCommand command2 = new SqlCommand("SELECT HID AS HID FROM USGkontor.Lokaleholdfordeling Where Holdkode = '" + Holdkode.Text + "' AND HID = '" + HID.Text + "' ", conn);
+            using (SqlDataReader reader2 = command2.ExecuteReader())
+            {
+                if (reader2.Read())
+                {
+                    //     Console.WriteLine(String.Format("{0}", reader2["HID"]));
+                    lb_IndILokaleholdfordeling.Text = "Er indsat";
+                }
+                else
+                {
+                    lb_IndILokaleholdfordeling.Text = "Mangler";
+                }
+            }
+
+            SqlCommand command3 = new SqlCommand("SELECT HID AS HID FROM USGkontor.TrænerHold Where HID = '" + HID.Text + "' ", conn);
+            using (SqlDataReader reader2 = command3.ExecuteReader())
+            {
+                if (reader2.Read())
+                {
+                    //     Console.WriteLine(String.Format("{0}", reader2["HID"]));
+                    lb_traenerhold.Text = "Er indsat";
+                }
+                else
+                {
+                    lb_traenerhold.Text = "Mangler";
+                }
+            }
+
+            SqlCommand command4 = new SqlCommand("SELECT HID AS HID FROM USGkontor.linkholdholdtype Where HID = '" + HID.Text + "' ", conn);
+            using (SqlDataReader reader2 = command4.ExecuteReader())
+            {
+                if (reader2.Read())
+                {
+                    //     Console.WriteLine(String.Format("{0}", reader2["HID"]));
+                    lb_linkholdholdtype.Text = "Er indsat";
+                }
+                else
+                {
+                    lb_linkholdholdtype.Text = "Mangler";
+                }
+            }
+
+
+
+            conn.Close();
+
+
+
+
+
+
+
+
+
  /*           CB_TotalFriTimeindtastning.Checked = Convert.ToBoolean(DRrow["TotalFriTimeIndtastning"].ToString());
             CB_opkraevIkkeMedlemsgebyr.Checked = Convert.ToBoolean(DRrow["OpkrævIkkeMedlemsgebyr"].ToString());
             CB_Afmeldingsgebyr.Checked = Convert.ToBoolean(DRrow["afmeldegebyr"].ToString());
@@ -153,26 +238,14 @@ namespace OpretHold
             System.Data.SqlClient.SqlCommand cmd2 = new System.Data.SqlClient.SqlCommand();
             cmd2.CommandType = System.Data.CommandType.Text;
             string returnValueHID = "";
-          /*    string stmt = "INSERT INTO USGkontor.Test4(T1, T2, T3) VALUES(@Holdkode, @Holdnavn, @TraenerPris)";
-
-              SqlCommand cmd2 = new SqlCommand(stmt, Connection1);
-              cmd2.Parameters.Add("@Holdkode", SqlDbType.VarChar, 100);
-              cmd2.Parameters.Add("@Holdnavn", SqlDbType.VarChar, 100);
-              cmd2.Parameters.Add("@TTraenerPris", SqlDbType.VarChar, 100);
-
-              cmd2.Parameters["@Holdkode"].Value = Holdkode.Text;
-              cmd2.Parameters["@Holdnavn"].Value = Holdnavn.Text;
-              cmd2.Parameters["@TraenerPris"].Value = TraenerPris.Text;
-
-              cmd2.ExecuteNonQuery();*/
-
-
 
               System.Data.SqlClient.SqlConnection sqlConnection1 = new System.Data.SqlClient.SqlConnection("server=sql.metalogic.dk; database=USGKontor;Persist Security Info=True;User ID=usgkontor;Password=1hihh1hihh");
-        
+              
+              string id;
+
               System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand();
               cmd.CommandType = System.Data.CommandType.Text;
-              cmd.CommandText = "INSERT USGKontor.Test4 (T1, T2,T3)  VALUES(@Holdkode, @Holdnavn, @TraenerPris) ";
+              cmd.CommandText = "INSERT USGKontor.Test4 (T1, T2,T3) out id  VALUES(@Holdkode, @Holdnavn, @TraenerPris) ";
                                  
               cmd.Connection = sqlConnection1;
 
@@ -187,14 +260,13 @@ namespace OpretHold
             
               sqlConnection1.Open();
                  cmd.ExecuteNonQuery();
-
-
 //-------------------
-                 /*
+                 
                              string navn = "";
                              try
                              {
 
+                                 /*
                                  SqlCommand command = sqlConnection1.CreateCommand();
                                  SqlTransaction transaction;
 
@@ -205,62 +277,12 @@ namespace OpretHold
 
 
 
-
-
-
-                                 cmd.CommandText = "INSERT USGKontor.TrænerHold (Nr, Holdkode, HID)  VALUES(@TraenerNr, @Holdkode, @HID) ";
-
-                                 cmd.Connection = sqlConnection1;
-
-                                 cmd.Parameters.Add("@Nr", SqlDbType.VarChar, 100);
-                                 cmd.Parameters.Add("@Holdkode", SqlDbType.VarChar, 100);
-                                 cmd.Parameters.Add("@HID", SqlDbType.VarChar, 100);
-
-                                 cmd.Parameters["@Nr"].Value = Holdkode.Text;
-                                 cmd.Parameters["@Holdkode"].Value = Holdnavn.Text;
-                                 cmd.Parameters["@HID"].Value = TraenerPris.Text;
-
-                                 cmd.ExecuteNonQuery();
-
-
-
-                                 cmd.CommandText = "INSERT USGKontor.TrænerHold (LokaleKode, Holdkode, Ugedag, Starttid, Sluttid, Startdato, Slutdato, HID, Periode, Fritraening)  VALUES(@LokaleKode, @Holdkode, @Ugedag, @Starttid, @Sluttid, @Startdato, @Slutdato, @HID, @Periode, @Fritraening) ";
-
-                                 cmd.Connection = sqlConnection1;
-
-                                 cmd.Parameters.Add("@LokaleKode", SqlDbType.VarChar, 100);
-                                 cmd.Parameters.Add("@Holdkode", SqlDbType.VarChar, 100);
-                                 cmd.Parameters.Add("@Ugedag", SqlDbType.VarChar, 100);
-                                 cmd.Parameters.Add("@Starttid", SqlDbType.DateTime, 100);
-                                 cmd.Parameters.Add("@Sluttid", SqlDbType.DateTime, 100);
-                                 cmd.Parameters.Add("@Startdato", SqlDbType.Date, 100);
-                                 cmd.Parameters.Add("@Slutdato", SqlDbType.Date, 100);
-                                 cmd.Parameters.Add("@HID", SqlDbType.Int, 100);
-                                 cmd.Parameters.Add("@Periode", SqlDbType.VarChar, 100);
-                                 cmd.Parameters.Add("@Fritraening", SqlDbType.Bit, 100);
-
-                                 cmd.Parameters["@LokaleKode"].Value = Holdkode.Text;
-                                 cmd.Parameters["@Holdkode"].Value = Holdnavn.Text;
-                                 cmd.Parameters["@Ugedag"].Value = Ugedag.Text;
-                                 cmd.Parameters["@Starttid"].Value = Starttid.Text;
-                                 cmd.Parameters["@Sluttid"].Value = Holdnavn.Text;
-                                 cmd.Parameters["@Startdato"].Value = TraenerPris.Text;
-                                 cmd.Parameters["@Slutdato"].Value = Holdkode.Text;
-                                 cmd.Parameters["@HID"].Value = Holdnavn.Text;
-                                 cmd.Parameters["@Periode"].Value = TraenerPris.Text;
-                                 cmd.Parameters["@Fritraening"].Value = Holdkode.Text;
-
-
-                                 cmd.ExecuteNonQuery();
-
-
-                                 cmd3.CommandText = "INSERT USGKontor.Hold (Holdkode, Holdnavn, DeltagerAfgReference, Deltagerafg, EjStudAfgReference, EjStudAfg, Køn, Niveau, Vis, Aktiv, Holdplads, ProcentIkkeStud, Rate1, Rate2, ExtraGebyr, BetalingsFrist, MedlemsGebyr, AdminGebyr, SommerHold, TraenerPris, KursusHold, ParvisTilmelding, AabenTilmelding, KlubTilmelding, Fase1, Fase2, Fase_aabenForTidligereEjStud, Venteliste, HoldGruppe, sportsgrenid, Sportsgren, Ho1, StudenterPris, Budgetteret, VID, TrænerePerGang, AntTræninger, ventelistePladsGyldigAntalDage, FriTimeIndtastning, flyttegebyr, afmeldegebyr, opkrævIkkeMedlemsgebyr, TotalFriTimeIndtastning, PuljeLoen) " +
+                              
+                                 cmd.CommandText = "INSERT USGKontor.Hold (Holdkode, Holdnavn, DeltagerAfgReference, Deltagerafg, EjStudAfgReference, EjStudAfg, Køn, Niveau, Vis, Aktiv, Holdplads, ProcentIkkeStud, Rate1, Rate2, ExtraGebyr, BetalingsFrist, MedlemsGebyr, AdminGebyr, SommerHold, TraenerPris, KursusHold, ParvisTilmelding, AabenTilmelding, KlubTilmelding, Fase1, Fase2, Fase_aabenForTidligereEjStud, Venteliste, HoldGruppe, sportsgrenid, Sportsgren, Ho1, StudenterPris, Budgetteret, VID, TrænerePerGang, AntTræninger, ventelistePladsGyldigAntalDage, FriTimeIndtastning, flyttegebyr, afmeldegebyr, opkrævIkkeMedlemsgebyr, TotalFriTimeIndtastning, PuljeLoen) " +
                                                                   " Output Inserted.HID VALUES(@Holdkode, @Holdnavn, @DeltagerAfgReference, @Deltagerafg, @EjStudAfgReference, @EjStudAfg, @Køn, @Niveau, @Vis, @Aktiv, @Holdplads, @ProcentIkkeStud, @Rate1, @Rate2, @ExtraGebyr, @BetalingsFrist, @MedlemsGebyr, @AdminGebyr, @SommerHold, @TraenerPris, @KursusHold, @ParvisTilmelding, @AabenTilmelding, @KlubTilmelding, @Fase1, @Fase2, @Fase_aabenForTidligereEjStud, @Venteliste, @HoldGruppe, @sportsgrenid, @Sportsgren, @Ho1, @StudenterPris, @Budgetteret, @VID, @TrænerePerGang, @AntTræninger, @ventelistePladsGyldigAntalDage, @FriTimeIndtastning, @flyttegebyr, @afmeldegebyr, @opkrævIkkeMedlemsgebyr, @TotalFriTimeIndtastning, @PuljeLoen) ";
                                  
-                  returnValueHID = cmd3.ExecuteScalar().ToString();
-                                
-                  
-                  cmd.Connection = sqlConnection1;
+                                 returnValueHID = cmd.ExecuteScalar().ToString();                              
+                                 cmd.Connection = sqlConnection1;
 
 
 
@@ -283,28 +305,28 @@ namespace OpretHold
                                  cmd.Parameters.Add("@FriTimeIndtastning", SqlDbType.Bit, 100);
                                  cmd.Parameters["@FriTimeIndtastning"].Value = false;
 
-                                 cmd.Parameters.Add("@ventelistePladsGyldigAntalDage", SqlDbType.Int, 100);
+                                 cmd.Parameters.Add("@ventelistePladsGyldigAntalDage", SqlDbType.Int, 32);
                                  cmd.Parameters["@ventelistePladsGyldigAntalDage"].Value = 0;
 
-                                 cmd.Parameters.Add("@AntTræninger", SqlDbType.Int, 100);
+                                 cmd.Parameters.Add("@AntTræninger", SqlDbType.Int, 32);
                                  cmd.Parameters["@AntTræninger"].Value = AntTraeninger.Text;
 
 
-                                 cmd.Parameters.Add("@AntTræninger", SqlDbType.Int, 100);
+                                 cmd.Parameters.Add("@AntTræninger", SqlDbType.Int, 32);
                                  cmd.Parameters["@AntTræninger"].Value = AntTraeninger.Text;
 
-                                 cmd.Parameters.Add("@TrænerePerGang", SqlDbType.Int, 100);
+                                 cmd.Parameters.Add("@TrænerePerGang", SqlDbType.Int, 32);
                                  cmd.Parameters["@TrænerePerGang"].Value = TraenerePerGang.Text;
 
 
-                                 cmd.Parameters.Add("@VID", SqlDbType.Int, 100);
+                                 cmd.Parameters.Add("@VID", SqlDbType.Int, 32);
                                  cmd.Parameters["@VID"].Value = VID.Text;
 
-                                 cmd.Parameters.Add("@Budgetteret", SqlDbType.Int, 100);
+                                 cmd.Parameters.Add("@Budgetteret", SqlDbType.Int, 32);
                                  cmd.Parameters["@Budgetteret"].Value = Budgetteret.Text;
 
 
-                                 cmd.Parameters.Add("@StudenterPris", SqlDbType.Int, 100);
+                                 cmd.Parameters.Add("@StudenterPris", SqlDbType.Int, 32);
                                  cmd.Parameters["@StudenterPris"].Value = 0;
 
                                  cmd.Parameters.Add("@Ho1", SqlDbType.Bit, 100);
@@ -314,7 +336,7 @@ namespace OpretHold
                                  cmd.Parameters.Add("@Sportsgren", SqlDbType.VarChar, 100);
                                  cmd.Parameters["@Sportsgren"].Value = Sportsgren.Text;
 
-                                 cmd.Parameters.Add("@sportsgrenid", SqlDbType.Int, 100);
+                                 cmd.Parameters.Add("@sportsgrenid", SqlDbType.Int, 32);
                                  cmd.Parameters["@sportsgrenid"].Value =  // MANGLER SKAL HENTES VIA INSERT;      
 
 
@@ -346,27 +368,27 @@ namespace OpretHold
                                  cmd.Parameters.Add("@KursusHold", SqlDbType.Bit, 100);
                                  cmd.Parameters["@KursusHold"].Value = false;
 
-                                 cmd.Parameters.Add("@TraenerPris", SqlDbType.Int, 100);
+                                 cmd.Parameters.Add("@TraenerPris", SqlDbType.Int, 32);
                                  cmd.Parameters["@TraenerPris"].Value = TraenerPris.Text;
 
                                  cmd.Parameters.Add("@Holdkode", SqlDbType.VarChar, 100);
                                  cmd.Parameters.Add("@Holdnavn", SqlDbType.VarChar, 100);
-                                 cmd.Parameters.Add("@DeltagerAfgReference", SqlDbType.Int, 100);
-                                 cmd.Parameters.Add("@Deltagerafg", SqlDbType.Int, 100);
-                                 cmd.Parameters.Add("@EjStudAfgReference", SqlDbType.Int, 100);
-                                 cmd.Parameters.Add("@EjStudAfg", SqlDbType.Int, 100);
+                                 cmd.Parameters.Add("@DeltagerAfgReference", SqlDbType.Int, 32);
+                                 cmd.Parameters.Add("@Deltagerafg", SqlDbType.Int, 32);
+                                 cmd.Parameters.Add("@EjStudAfgReference", SqlDbType.Int, 32);
+                                 cmd.Parameters.Add("@EjStudAfg", SqlDbType.Int, 32);
                                  cmd.Parameters.Add("@Køn", SqlDbType.VarChar, 100);
                                  cmd.Parameters.Add("@Niveau", SqlDbType.VarChar, 100);
                                  cmd.Parameters.Add("@Vis", SqlDbType.Bit, 100);
 
                                  cmd.Parameters.Add("@Aktiv", SqlDbType.Bit, 100);
-                                 cmd.Parameters.Add("@Holdplads", SqlDbType.Int, 100);
-                                 cmd.Parameters.Add("@ProcentIkkeStud", SqlDbType.Int, 100);
-                                 cmd.Parameters.Add("@Rate1", SqlDbType.Int, 100);
-                                 cmd.Parameters.Add("@Rate2", SqlDbType.Int, 100);
-                                 cmd.Parameters.Add("@ExtraGebyr", SqlDbType.Int, 100);
-                                 cmd.Parameters.Add("@MedlemsGebyr", SqlDbType.Int, 100);
-                                 cmd.Parameters.Add("@AdminGebyr", SqlDbType.Int, 100);
+                                 cmd.Parameters.Add("@Holdplads", SqlDbType.Int, 32);
+                                 cmd.Parameters.Add("@ProcentIkkeStud", SqlDbType.Int, 32);
+                                 cmd.Parameters.Add("@Rate1", SqlDbType.Int, 32);
+                                 cmd.Parameters.Add("@Rate2", SqlDbType.Int, 32);
+                                 cmd.Parameters.Add("@ExtraGebyr", SqlDbType.Int, 32);
+                                 cmd.Parameters.Add("@MedlemsGebyr", SqlDbType.Int, 32);
+                                 cmd.Parameters.Add("@AdminGebyr", SqlDbType.Int, 32);
                                  cmd.Parameters.Add("@SommerHold", SqlDbType.Bit, 100);
 
 
@@ -380,7 +402,7 @@ namespace OpretHold
                                  cmd.Parameters["@Niveau"].Value = Niveau.Text;
                                  cmd.Parameters["@Vis"].Value = false;
 
-                                 cmd.Parameters["@Aktiv"].Value = false;
+                                 cmd.Parameters["@Aktiv"].Value = true;
                                  cmd.Parameters["@Holdplads"].Value = Holdpladser.Text;
                                  cmd.Parameters["@ProcentIkkeStud"].Value = ProcentIkkeStud.Text;
                                  cmd.Parameters["@Rate1"].Value = 0;
@@ -399,6 +421,69 @@ namespace OpretHold
 
 
 
+                                 cmd.CommandText = "INSERT USGKontor.LokaleHoldfordeling (LokaleKode, Holdkode, Ugedag, Starttid, Sluttid, Startdato, Slutdato, HID, Periode, Fritraening)  VALUES(@LokaleKode, @Holdkode, @Ugedag, @Starttid, @Sluttid, @Startdato, @Slutdato, @HID, @Periode, @Fritraening) ";
+
+                                 cmd.Connection = sqlConnection1;
+
+                                 cmd.Parameters.Add("@LokaleKode", SqlDbType.VarChar, 100);
+                                 cmd.Parameters.Add("@Holdkode", SqlDbType.VarChar, 100);
+                                 cmd.Parameters.Add("@Ugedag", SqlDbType.VarChar, 100);
+                                 cmd.Parameters.Add("@Starttid", SqlDbType.DateTime, 100);
+                                 cmd.Parameters.Add("@Sluttid", SqlDbType.DateTime, 100);
+                                 cmd.Parameters.Add("@Startdato", SqlDbType.Date, 100);
+                                 cmd.Parameters.Add("@Slutdato", SqlDbType.Date, 100);
+                                 cmd.Parameters.Add("@HID", SqlDbType.Int, 32);
+                                 cmd.Parameters.Add("@Periode", SqlDbType.VarChar, 100);
+                                 cmd.Parameters.Add("@Fritraening", SqlDbType.Bit, 100);
+
+                                 cmd.Parameters["@LokaleKode"].Value = Holdkode.Text;
+                                 cmd.Parameters["@Holdkode"].Value = Holdnavn.Text;
+                                 cmd.Parameters["@Ugedag"].Value = Ugedag.Text;
+                                 cmd.Parameters["@Starttid"].Value = Starttid.Text;
+                                 cmd.Parameters["@Sluttid"].Value = Holdnavn.Text;
+                                 cmd.Parameters["@Startdato"].Value = TraenerPris.Text;
+                                 cmd.Parameters["@Slutdato"].Value = Holdkode.Text;
+                                 cmd.Parameters["@HID"].Value = Holdnavn.Text;
+                                 cmd.Parameters["@Periode"].Value = TraenerPris.Text;
+                                 cmd.Parameters["@Fritraening"].Value = Holdkode.Text;
+
+                                 cmd.ExecuteNonQuery();
+
+
+                   
+                   
+                                 cmd.CommandText = "INSERT USGKontor.TrænerHold (Nr, Holdkode, HID)  VALUES(@TraenerNr, @Holdkode, @HID) ";
+
+                                 cmd.Connection = sqlConnection1;
+
+                                 cmd.Parameters.Add("@Nr", SqlDbType.VarChar, 100);
+                                 cmd.Parameters.Add("@Holdkode", SqlDbType.VarChar, 100);
+                                 cmd.Parameters.Add("@HID", SqlDbType.VarChar, 100);
+
+                                 cmd.Parameters["@Nr"].Value = Holdkode.Text;
+                                 cmd.Parameters["@Holdkode"].Value = Holdnavn.Text;
+                                 cmd.Parameters["@HID"].Value = TraenerPris.Text;
+
+                                 cmd.ExecuteNonQuery(); 
+                  
+
+                                 cmd.CommandText = "INSERT USGKontor.linkholdholdtype (Nr, HID)  VALUES(@Nr, @HID) ";
+
+                                 cmd.Connection = sqlConnection1;
+
+                                 cmd.Parameters.Add("@Nr", SqlDbType.VarChar, 100);
+                                 cmd.Parameters.Add("@HID", SqlDbType.VarChar, 100);
+
+                                 cmd.Parameters["@Nr"].Value = Holdkode.Text;
+                                 cmd.Parameters["@HID"].Value = TraenerPris.Text;
+
+                                 cmd.ExecuteNonQuery(); 
+                  
+
+
+
+
+
                                  transaction.Commit();
                              }
                              catch(Exception eee)
@@ -407,7 +492,7 @@ namespace OpretHold
                 
                              }
 
-                             */
+                             
 
 
                  //      cmd.ExecuteNonQuery();
@@ -427,9 +512,9 @@ namespace OpretHold
            //       if (sqlConnection1.State == System.Data.ConnectionState.Open)
             //          sqlConnection1.Close();
 
-                      
-              }
-
+                      */
+                             }
+                             catch { }                   
 //--------------------------------------
                 return returnValueHID;
               Connection1.Close();
@@ -444,156 +529,155 @@ namespace OpretHold
         private void button1_Click(object sender, EventArgs e)
         {
 
-        //    insertInDb();
+            //    insertInDb();
 
-    /*        System.Data.SqlClient.SqlConnection sqlConnection1 = new System.Data.SqlClient.SqlConnection("server=sql.metalogic.dk; database=USGKontor;Persist Security Info=True;User ID=usgkontor;Password=1hihh1hihh");
-
-            System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand();
-            cmd.CommandType = System.Data.CommandType.Text;
-            cmd.CommandText = "INSERT USGKontor.Test4 (T1, T2,T3) VALUES ('" + Holdkode.Text + "', '" + DeltagerPris.Text + "','" + DeltagerRefPris.Text + "')";
-            cmd.Connection = sqlConnection1;
-
-
-
-
-            sqlConnection1.Open();
-       //     cmd.ExecuteNonQuery();
-            sqlConnection1.Close();
-            */
             var HK = "";
 
-              if (LokaleHoldFordeling != null)
-                    {                                             
-
-                            if (inc <= DBHold.Tables[0].Rows.Count)
-                            {
-
-                                DataTable HoldTemp2 = DBHold.Tables[0];
-                                inc++; 
-                                var result = HoldTemp2.AsEnumerable()
-                                            .Where((row, index) => index == inc)
-                                            .CopyToDataTable();
-                                
-                                DataSet SelectedData3 = new DataSet();                           
-                                SelectedData3.Tables.Add(result);
-                                DataRow DRrow = SelectedData3.Tables[0].Rows[0];
-
-                                DataTable HoldTemp3 = LokaleHoldFordeling.Tables[0];
-                                var result2 = HoldTemp3.AsEnumerable()
-                                            .Where((row, index) => index == inc)
-                                            .CopyToDataTable();
-
-                                DataSet SelectedData4 = new DataSet();
-                                SelectedData4.Tables.Add(result2);
-                                DataRow DRrow2 = SelectedData4.Tables[0].Rows[0];
-
-
-                                
-                                Holdkode.Text = DRrow["HoldKode"].ToString();
-                                Holdnavn.Text = DRrow2["Holdnavn"].ToString();
-                             //   DeltagerRefPris.Text = DRrow["DeltagerAfgReference"].ToString();
-                                DeltagerPris.Text = DRrow2["Gebyr"].ToString();
-                             //   EjStudRefPris.Text = DRrow["EjStudAfgReference"].ToString();
-                                EjStudPris.Text = DRrow2["Ej stud"].ToString();
-                                Bemaerkninger.Text = DRrow2["Bemærkninger"].ToString();
-                                Koen.Text = DRrow["Køn"].ToString();
-                         //       Tid.Text = DRrow["Tid"].ToString();
-                                Niveau.Text = DRrow2["Niveau"].ToString();
-                        //        CB_Vis.Checked = Convert.ToBoolean(DRrow["Vis"].ToString());
-                        //        CB_Aktiv.Checked = Convert.ToBoolean(DRrow["Aktiv"].ToString());
-                                Holdpladser.Text = DRrow["Holdpladser"].ToString();
-                                ProcentIkkeStud.Text = DRrow["Procent ikke stud"].ToString();
-                        //        ExtraGebyr.Text = DRrow["ExtraGebyr"].ToString();
-                                Medlemsgebyr.Text = DRrow["Medlemsgebyr"].ToString();
-                                AdminGebyr.Text = DRrow["AdminGebyr"].ToString();
-                         //       CB_Sommerhold.Checked = Convert.ToBoolean(DRrow["Sommerhold"].ToString());
-                         //       TraenerRefPris.Text = DRrow["TraenerPrisReference"].ToString();
-                                TraenerPris.Text = DRrow["TraenerPris"].ToString();
-                                Sportsgren.Text = DRrow["sportsgren"].ToString();
-                                Budgetteret.Text = DRrow["Budgetteret"].ToString();
-                                VID.Text = DRrow["VID"].ToString();
-                                TraenerePerGang.Text = DRrow["Trænere Pr Gang"].ToString();
-                                AntTraeninger.Text = DRrow["Antal Træninger"].ToString();
-                          //      CB_TotalFriTimeindtastning.Checked = Convert.ToBoolean(DRrow["TotalFriTimeIndtastning"].ToString());
-                          //      CB_opkraevIkkeMedlemsgebyr.Checked = Convert.ToBoolean(DRrow["OpkrævIkkeMedlemsgebyr"].ToString());
-                          //      CB_Afmeldingsgebyr.Checked = Convert.ToBoolean(DRrow["afmeldegebyr"].ToString());
-                          //      CB_Flyttegebyr.Checked = Convert.ToBoolean(DRrow["flyttegebyr"].ToString());
-                          //      CB_FriTimeindtastning.Checked = Convert.ToBoolean(DRrow["FriTimeIndtastning"].ToString());
-                          //      CB_Venteliste.Checked = Convert.ToBoolean(DRrow["Venteliste"].ToString());
-                          //      CB_AabenFortidligereEjStud.Checked = Convert.ToBoolean(DRrow["Fase_aabenForTidligereEjStud"].ToString());
-                          //      CB_Fase2.Checked = Convert.ToBoolean(DRrow["Fase2"].ToString());
-                          //      CB_Fase1.Checked = Convert.ToBoolean(DRrow["Fase1"].ToString());
-                          //      CB_Klubtilmelding.Checked = Convert.ToBoolean(DRrow["Klubtilmelding"].ToString());
-                          //      CB_AabenTilmelding.Checked = Convert.ToBoolean(DRrow["AabenTilmelding"].ToString());
-                          //      CB_Parvistilmelding.Checked = Convert.ToBoolean(DRrow["ParvisTilmelding"].ToString());
-                          //      CB_Kursushold.Checked = Convert.ToBoolean(DRrow["KursusHold"].ToString());
-                                holdType.Text = DRrow["Holdtype"].ToString();
-                                holdtypeID.Text = DRrow["Holdtypeid"].ToString();
-                                dataGridView3.DataSource = SelectedData3.Tables[0];
-                              
-                         
-
-
-
-
-
-
-
-
-
-
-
-
-
-                            }   
-                    }
-              
-              updateGrids();
-
-
-
-           /* var connectionString = ConfigurationManager.ConnectionStrings["CharityManagement"].ConnectionString;
-            SqlConnection myConnection = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["UsgDatabase"].ConnectionString);
-            myConnection.Open();
-
-            string stmt = "INSERT INTO USGkontor.Test4(T1, T2, T3) VALUES(@Holdkode, @T2, @T3)";
-
-            SqlCommand cmd2 = new SqlCommand(stmt, myConnection);
-            cmd.Parameters.Add("@Holdkode", SqlDbType.VarChar, 100);
-            cmd.Parameters.Add("@T2", SqlDbType.VarChar, 100);
-            cmd.Parameters.Add("@T3", SqlDbType.VarChar, 100);
-
-            cmd.Parameters["@Holdkode"].Value = textBox1.Text;
-            cmd.Parameters["@T2"].Value = textBox2.Text;
-            cmd.Parameters["@T3"].Value = textBox2.Text;
-
-            cmd2.ExecuteNonQuery();
-
-
-            myConnection.Close();
-          */
-
-        //    var lines = File.ReadLines("input.txt").Skip(1);
-
-         /*   using (System.IO.StreamReader reader = new System.IO.StreamReader(fileStream))
+            if (LokaleHoldFordeling != null)
             {
-                // Read the first line from the file and write it the textbox.
-                string temp = reader.ReadLine();
-                string[] words = temp.Split(' ');
-                textBox1.Text = words[0];
-                textBox2.Text = words[1];
-                textBox3.Text = words[2];
-                textBox4.Text = words[3];
-                textBox5.Text = words[4];
 
-                foreach (string word in words)
+                if (inc <= DBHold.Tables[0].Rows.Count)
                 {
-                    Console.WriteLine(word);
+
+                    DataTable HoldTemp2 = DBHold.Tables[0];
+                    inc++;
+                    var result = HoldTemp2.AsEnumerable()
+                                .Where((row, index) => index == inc)
+                                .CopyToDataTable();
+
+                    DataSet SelectedData3 = new DataSet();
+                    SelectedData3.Tables.Add(result);
+                    DataRow DRrow = SelectedData3.Tables[0].Rows[0];
+
+                    DataTable HoldTemp3 = LokaleHoldFordeling.Tables[0];
+                    var result2 = HoldTemp3.AsEnumerable()
+                                .Where((row, index) => index == inc)
+                                .CopyToDataTable();
+
+                    DataSet SelectedData4 = new DataSet();
+                    SelectedData4.Tables.Add(result2);
+                    DataRow DRrow2 = SelectedData4.Tables[0].Rows[0];
+
+
+
+                    Holdkode.Text = DRrow["HoldKode"].ToString();
+                    Holdnavn.Text = DRrow2["Holdnavn"].ToString();
+                    //   DeltagerRefPris.Text = DRrow["DeltagerAfgReference"].ToString();
+                    DeltagerPris.Text = DRrow2["Gebyr"].ToString();
+                    //   EjStudRefPris.Text = DRrow["EjStudAfgReference"].ToString();
+                    EjStudPris.Text = DRrow2["Ej stud"].ToString();
+                    Bemaerkninger.Text = DRrow2["Bemærkninger"].ToString();
+                    Koen.Text = DRrow["Køn"].ToString();
+                    //       Tid.Text = DRrow["Tid"].ToString();
+                    Niveau.Text = DRrow2["Niveau"].ToString();
+                    //        CB_Vis.Checked = Convert.ToBoolean(DRrow["Vis"].ToString());
+                    //        CB_Aktiv.Checked = Convert.ToBoolean(DRrow["Aktiv"].ToString());
+                    Holdpladser.Text = DRrow["Holdpladser"].ToString();
+                    ProcentIkkeStud.Text = DRrow["Procent ikke stud"].ToString();
+                    //        ExtraGebyr.Text = DRrow["ExtraGebyr"].ToString();
+                    Medlemsgebyr.Text = DRrow["Medlemsgebyr"].ToString();
+                    AdminGebyr.Text = DRrow["AdminGebyr"].ToString();
+                    //       CB_Sommerhold.Checked = Convert.ToBoolean(DRrow["Sommerhold"].ToString());
+                    //       TraenerRefPris.Text = DRrow["TraenerPrisReference"].ToString();
+                    TraenerPris.Text = DRrow["TraenerPris"].ToString();
+                    Sportsgren.Text = DRrow["sportsgren"].ToString();
+                    Budgetteret.Text = DRrow["Budgetteret"].ToString();
+                    VID.Text = DRrow["VID"].ToString();
+                    TraenerePerGang.Text = DRrow["Trænere Pr Gang"].ToString();
+                    AntTraeninger.Text = DRrow["Antal Træninger"].ToString();
+                    //      CB_TotalFriTimeindtastning.Checked = Convert.ToBoolean(DRrow["TotalFriTimeIndtastning"].ToString());
+                    //      CB_opkraevIkkeMedlemsgebyr.Checked = Convert.ToBoolean(DRrow["OpkrævIkkeMedlemsgebyr"].ToString());
+                    //      CB_Afmeldingsgebyr.Checked = Convert.ToBoolean(DRrow["afmeldegebyr"].ToString());
+                    //      CB_Flyttegebyr.Checked = Convert.ToBoolean(DRrow["flyttegebyr"].ToString());
+                    //      CB_FriTimeindtastning.Checked = Convert.ToBoolean(DRrow["FriTimeIndtastning"].ToString());
+                    //      CB_Venteliste.Checked = Convert.ToBoolean(DRrow["Venteliste"].ToString());
+                    //      CB_AabenFortidligereEjStud.Checked = Convert.ToBoolean(DRrow["Fase_aabenForTidligereEjStud"].ToString());
+                    //      CB_Fase2.Checked = Convert.ToBoolean(DRrow["Fase2"].ToString());
+                    //      CB_Fase1.Checked = Convert.ToBoolean(DRrow["Fase1"].ToString());
+                    //      CB_Klubtilmelding.Checked = Convert.ToBoolean(DRrow["Klubtilmelding"].ToString());
+                    //      CB_AabenTilmelding.Checked = Convert.ToBoolean(DRrow["AabenTilmelding"].ToString());
+                    //      CB_Parvistilmelding.Checked = Convert.ToBoolean(DRrow["ParvisTilmelding"].ToString());
+                    //      CB_Kursushold.Checked = Convert.ToBoolean(DRrow["KursusHold"].ToString());
+                    holdType.Text = DRrow["Holdtype"].ToString();
+                    holdtypeID.Text = DRrow["Holdtypeid"].ToString();
+                    dataGridView3.DataSource = SelectedData3.Tables[0];
                 }
-                //     textBox1.Text = reader.ReadLine();
-            }*/
-            
-    //        using (var db = new dev.Models.usg.USGKontorEntities())
+            }
+
+            updateGrids();
+
+
+            SqlConnection conn = new SqlConnection("server=sql.metalogic.dk; database=USGKontor;Persist Security Info=True;User ID=usgkontor;Password=1hihh1hihh");
+            conn.Open();
+
+            SqlCommand command = new SqlCommand("SELECT HID AS HID FROM USGkontor.Hold Where Holdkode = '" + Holdkode.Text + "' AND VID = '" + VID.Text + "' ", conn);
+            using (SqlDataReader reader2 = command.ExecuteReader())
+            {
+                if (reader2.Read())
+                {
+                    //     Console.WriteLine(String.Format("{0}", reader2["HID"]));
+                    HID.Text = reader2["HID"].ToString();
+                    lb_IndIHold.Text = "Er indsat";
+                }
+                else
+                {
+                    HID.Text = "";
+                    lb_IndIHold.Text = "Mangler";
+                }
+            }
+
+            SqlCommand command2 = new SqlCommand("SELECT HID AS HID FROM USGkontor.Lokaleholdfordeling Where Holdkode = '" + Holdkode.Text + "' AND HID = '" + HID.Text + "' ", conn);
+            using (SqlDataReader reader2 = command2.ExecuteReader())
+            {
+                if (reader2.Read())
+                {
+                    //     Console.WriteLine(String.Format("{0}", reader2["HID"]));
+                    lb_IndILokaleholdfordeling.Text = "Er indsat";
+                }
+                else
+                {
+                    lb_IndILokaleholdfordeling.Text = "Mangler";
+                }
+            }
+
+            SqlCommand command3 = new SqlCommand("SELECT HID AS HID FROM USGkontor.TrænerHold Where HID = '" + HID.Text + "' ", conn);
+            using (SqlDataReader reader2 = command3.ExecuteReader())
+            {
+                if (reader2.Read())
+                {
+                    //     Console.WriteLine(String.Format("{0}", reader2["HID"]));
+                    lb_traenerhold.Text = "Er indsat";
+                }
+                else
+                {
+                    lb_traenerhold.Text = "Mangler";
+                }
+            }
+
+            SqlCommand command4 = new SqlCommand("SELECT HID AS HID FROM USGkontor.linkholdholdtype Where HID = '" + HID.Text + "' ", conn);
+            using (SqlDataReader reader2 = command4.ExecuteReader())
+            {
+                if (reader2.Read())
+                {
+                    //     Console.WriteLine(String.Format("{0}", reader2["HID"]));
+                    lb_linkholdholdtype.Text = "Er indsat";
+                }
+                else
+                {
+                    lb_linkholdholdtype.Text = "Mangler";
+                }
+            }
+
+
+
+            conn.Close();
+
+
+
+
+
+
+
         }
 
         private void updateGrids() 
@@ -639,7 +723,11 @@ namespace OpretHold
             SelectedData3.Tables.Add(TabelTilLokaleHoldFordeling);
             dataGridView4.DataSource = SelectedData3.Tables[0];
 
-
+            DataRow[] SportsgrenDataRow = SportsgrenGlobal.Tables[0].Select("Sportsgren = '" + Sportsgren.Text + "'");
+            if (SportsgrenDataRow.Length > 0)
+            {
+                SportsGrenID.Text = SportsgrenDataRow[0]["Id"].ToString();
+            }
 
 
             /*
@@ -692,6 +780,10 @@ namespace OpretHold
         private BindingSource bindingSource1 = new BindingSource();
         DataTable TabelTilTraenere = new DataTable();
         DataTable tbl4 = new DataTable();
+
+        DataSet SportsgrenGlobal = new DataSet();
+
+
         void openfile()
         {
 
@@ -735,7 +827,7 @@ namespace OpretHold
             OleDbDataAdapter DBHoldDa = new OleDbDataAdapter(DBHoldcmd);
             DBHoldDa.Fill(DBHold);
 
-            DataTable HoldTemp2 = DBHold.Tables[0];
+            DataTable HoldTemp2 = DBHold.Tables[0].Copy();
             var result = HoldTemp2.AsEnumerable()
                         .Where((row, index) => index == 0)
                         .CopyToDataTable();
@@ -758,10 +850,10 @@ namespace OpretHold
         //    dataGridView1.DataSource = LokaleHoldFordeling.Tables[0];
            
 
-            DataTable table = LokaleHoldFordeling.Tables[0];
+            DataTable table = LokaleHoldFordeling.Tables[0].Copy();
 
             DataTable tbl1 = new DataTable();
-            DataTable tbl = LokaleHoldFordeling.Tables[0];
+            DataTable tbl = LokaleHoldFordeling.Tables[0].Copy();
             DataRow[] dr = tbl.Select("Holdkode = '" + Holdkode.Text + "'");
             if (dr.Length > 0)
             {
@@ -771,7 +863,62 @@ namespace OpretHold
             DataSet SelectedData = new DataSet();
             SelectedData.Tables.Add(tbl1);
             dataGridView1.DataSource = SelectedData.Tables[0];
-            dataGridView1.Columns[0].DefaultCellStyle = new DataGridViewCellStyle { Format = "hh:mm:ss" };
+
+//----------------------------------TJEK af LOKALE kode og SPORTSGRENS Kode START
+
+            SqlConnection conn1 = new SqlConnection("server=sql.metalogic.dk; database=USGKontor;Persist Security Info=True;User ID=usgkontor;Password=1hihh1hihh");
+            conn1.Open();
+
+            foreach (DataRow row in LokaleHoldFordeling.Tables[0].Rows)
+            {
+                SqlCommand commandTjekdata = new SqlCommand("SELECT Lokalekode FROM USGkontor.Lokaler WHERE Lokalekode = '" + row["Lokalekode"].ToString() + "' ", conn1);
+                using (SqlDataReader reader3 = commandTjekdata.ExecuteReader())
+                {
+
+                    if (reader3.Read())
+                    { }
+                    else
+                    {
+                        MessageBox.Show("Der er fejl i Lokalekoden for " + row["Lokalekode"].ToString() + ". Hvor svært kan det være!?" );
+                    }
+                }
+            }
+
+
+    //        SqlConnection conn2 = new SqlConnection("server=sql.metalogic.dk; database=USGKontor;Persist Security Info=True;User ID=usgkontor;Password=1hihh1hihh");
+    //        conn1.Open();
+
+            foreach (DataRow row in DBHold.Tables[0].Rows)
+            {
+                SqlCommand commandTjekdata = new SqlCommand("SELECT Sportsgren FROM USGkontor.Sportsgren WHERE Sportsgren = '" + row["Sportsgren"].ToString() + "' ", conn1);
+                using (SqlDataReader reader3 = commandTjekdata.ExecuteReader())
+                {
+
+                    if (reader3.Read())
+                    { }
+                    else
+                    {
+                        MessageBox.Show("Der er fejl i Sportsgren for " + row["Sportsgren"].ToString() + ". Hvor svært kan det være!?");
+                    }
+                }
+            }
+
+
+
+
+            conn1.Close();
+    //        hhjg
+            //----------------------------------TJEK af LOKALE kode og SPORTSGRENS Kode SLUT
+
+
+
+
+
+
+
+
+
+     //       dataGridView1.Columns[0].DefaultCellStyle = new DataGridViewCellStyle { Format = "hh:mm:ss" };
 
           //  dataGridView1.Rows[5].Cells[3].Value = Convert.ToDateTime("hh:mm:ss");
             //----------------------------------------------------
@@ -902,6 +1049,40 @@ namespace OpretHold
             SelectedData2.Tables.Add(TabelTilTraenere);
             dataGridView2.DataSource = SelectedData2.Tables[0];
 */
+
+               SqlConnection ConHentSportsgren = new SqlConnection("server=sql.metalogic.dk; database=USGKontor;Persist Security Info=True;User ID=usgkontor;Password=1hihh1hihh");
+               ConHentSportsgren.Open();
+
+     /*          SqlCommand command = new SqlCommand("SELECT * FROM USGkontor.Sportsgren", ConHentSportsgren);
+               using (SqlDataReader reader3 = command.ExecuteReader())
+               {
+                   if (reader3.Read())
+                   {
+                       //     Console.WriteLine(String.Format("{0}", reader2["HID"]));
+                       Tid.Text = reader3["HID"].ToString();
+                   }
+               }
+               
+            */
+
+
+            string queryString = "SELECT * FROM USGkontor.Sportsgren";
+           SqlDataAdapter adapter = new SqlDataAdapter(queryString, ConHentSportsgren);
+
+      //     DataSet customers = new DataSet();
+            adapter.Fill(SportsgrenGlobal, "Sportsgren");
+
+
+
+
+
+
+         //      SportsgrenGlobal = reader3
+
+               ConHentSportsgren.Close();
+
+
+
             firstTeam();
 
           //  updateGrids();
@@ -1089,8 +1270,233 @@ namespace OpretHold
 
         }
 
+        private void Ind_I_hold_Click(object sender, EventArgs e)
+        {
+
+
+            SqlConnection conn1 = new SqlConnection("server=sql.metalogic.dk; database=USGKontor;Persist Security Info=True;User ID=usgkontor;Password=1hihh1hihh");
+            conn1.Open();
+
+            SqlCommand commandTjekTidligereOprettet = new SqlCommand("SELECT Holdkode, VID FROM USGkontor.Hold WHERE Holdkode = '" + Holdkode.Text + "' AND  VID = '" + VID.Text + "' ", conn1);
+            using (SqlDataReader reader3 = commandTjekTidligereOprettet.ExecuteReader())
+            {
+                if (reader3.Read())
+                { }
+                else
+                {
+
+                    System.Data.SqlClient.SqlConnection sqlConnection1 = new System.Data.SqlClient.SqlConnection("server=sql.metalogic.dk; database=USGKontor;Persist Security Info=True;User ID=usgkontor;Password=1hihh1hihh");
+                    System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand();
+                    sqlConnection1.Open();
+
+                    cmd.CommandText = "INSERT USGKontor.Hold (Holdkode, Holdnavn, DeltagerAfgReference, Deltagerafg, EjStudAfgReference, EjStudAfg, Køn, Niveau, Vis, Aktiv, Holdplads, ProcentIkkeStud, Rate1, Rate2, ExtraGebyr, MedlemsGebyr, AdminGebyr, SommerHold, TraenerPris, KursusHold, ParvisTilmelding, AabenTilmelding, KlubTilmelding, Fase1, Fase2, Fase_aabenForTidligereEjStud, Venteliste, HoldGruppe, sportsgrenid, Sportsgren, Ho1, StudenterPris, Budgetteret, VID, TrænerePerGang, AntTræninger, ventelistePladsGyldigAntalDage, FriTimeIndtastning, flyttegebyr, afmeldegebyr, opkrævIkkeMedlemsgebyr, TotalFriTimeIndtastning, PuljeLoen) " +
+                                                     " VALUES('" + Holdkode.Text + "', '" + Holdnavn.Text + "', 0 , '" + DeltagerPris.Text + "', 0, '" + EjStudPris.Text + "', '" + Koen.Text + "', '" + Niveau.Text + "', 0, 1, '" + Holdpladser.Text + "', '" + ProcentIkkeStud.Text + "', 0, 0, 0, 180, 50, 0, '" + TraenerPris.Text + "', 0, 0, 0, 0, 0, 0, 0, 0, 0, '" + SportsGrenID.Text + "', '" + Sportsgren.Text + "', 0, 0, '" + Budgetteret.Text + "', '" + VID.Text + "', '" + TraenerePerGang.Text + "', '" + AntTraeninger.Text + "', 0, 0, 0, 0, 0, 0, 0) ";
+
+                    cmd.Connection = sqlConnection1;
+
+                   cmd.ExecuteNonQuery();
+
+                    //      cmd.CommandText = "SELECT Max(HID) FROM Hold";
+                    //  cmd.ExecuteScalar();
+
+                    //         Tid.Text = cmd.ExecuteScalar().ToString();
+
+
+                    sqlConnection1.Close();
+
+                    SqlConnection conn = new SqlConnection("server=sql.metalogic.dk; database=USGKontor;Persist Security Info=True;User ID=usgkontor;Password=1hihh1hihh");
+                    conn.Open();
+
+                    SqlCommand command = new SqlCommand("SELECT MAX(HID) AS HID FROM USGkontor.Hold", conn);
+                    using (SqlDataReader reader2 = command.ExecuteReader())
+                    {
+                        if (reader2.Read())
+                        {
+                            //     Console.WriteLine(String.Format("{0}", reader2["HID"]));
+                            HID.Text = reader2["HID"].ToString();
+                        }
+                    }
+
+
+                    SqlCommand command2 = new SqlCommand("SELECT HID AS HID FROM USGkontor.Hold Where Holdkode = '" + Holdkode.Text + "' AND VID = '" + VID.Text + "' ", conn);
+                    using (SqlDataReader reader2 = command2.ExecuteReader())
+                    {
+                        if (reader2.Read())
+                        {
+                            //     Console.WriteLine(String.Format("{0}", reader2["HID"]));
+                            HID.Text = reader2["HID"].ToString();
+                            lb_IndIHold.Text = "Er indsat";
+                        }
+                        else
+                        {
+                            HID.Text = "";
+                            lb_IndIHold.Text = "Mangler";
+                        }
+                    }
+
+                    
+
+                    conn.Close();
+
+
+                }
+            }
+            conn1.Close();
+
+        }
+
+        private void Ind_I_LokaleHoldFordeling_Click(object sender, EventArgs e)
+        {
+            System.Data.SqlClient.SqlConnection sqlConnection1 = new System.Data.SqlClient.SqlConnection("server=sql.metalogic.dk; database=USGKontor;Persist Security Info=True;User ID=usgkontor;Password=1hihh1hihh");
+            System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand();
+            sqlConnection1.Open();
+
+            foreach (DataGridViewRow row in dataGridView4.Rows)
+            {
+
+                if (row.Cells["LokaleKode"].Value == null)
+                { }
+                else
+                {
+
+                    SqlCommand command3 = new SqlCommand("SELECT HID AS HID FROM USGkontor.LokaleHoldfordeling Where HID = '" + HID.Text + "' AND LokaleKode = '" + row.Cells["LokaleKode"].Value + "' ", sqlConnection1);
+                     using (SqlDataReader reader2 = command3.ExecuteReader())
+                     {
+                         if (reader2.Read())
+                         {
+
+                         }                            
+                         else
+                         {
+                             reader2.Close();
+                             cmd.CommandText = "INSERT USGKontor.LokaleHoldfordeling (LokaleKode, Holdkode, Ugedag, Starttid, Sluttid, Startdato, Slutdato, HID, Periode, Fritraening) " +                                                                                                                                                                                                                                                    //  DateTime.ParseExact(dateTimeString, "dd/MM/yyyy", null).ToString("MM/dd/yyyy")                                                              
+                                 " VALUES('" + row.Cells["LokaleKode"].Value + "', '" + row.Cells["Holdkode"].Value + "', '" + row.Cells["Ugedag"].Value + "', '" + ((DateTime)row.Cells["Starttid"].Value).ToShortTimeString() + "', '" + ((DateTime)row.Cells["Sluttid"].Value).ToShortTimeString() + "', '" + DateTime.ParseExact(((DateTime)row.Cells["StartDato"].Value).ToShortDateString(), "dd/MM/yyyy", null).ToString("MM/dd/yyyy") + "', '" + DateTime.ParseExact(((DateTime)row.Cells["SlutDato"].Value).ToShortDateString(), "dd/MM/yyyy", null).ToString("MM/dd/yyyy") + "', '" + HID.Text + "', '" + row.Cells["Periode"].Value + "', '" + row.Cells["Fritraening"].Value + "')";
+
+                             //        " VALUES('" + row.Cells["LokaleKode"].Value + "', '" + row.Cells["Holdkode"].Value + "', '" + row.Cells["Ugedag"].Value + "', '" + Convert.ToDateTime("19:00:00") + "', '" + Convert.ToDateTime("21:00:00") + "', '" + Convert.ToDateTime(row.Cells["Startdato"].Value) + "', '" + Convert.ToDateTime(row.Cells["Slutdato"].Value) + "', '" + HID.Text + "', '" + row.Cells["Periode"].Value + "', '" + row.Cells["Fritraening"].Value + "')";
+
+
+                             cmd.Connection = sqlConnection1;
+                             cmd.ExecuteNonQuery();
+                         }
+                     }
+                }
+            }
+
+
+            SqlCommand command2 = new SqlCommand("SELECT HID AS HID FROM USGkontor.Lokaleholdfordeling Where Holdkode = '" + Holdkode.Text + "' AND HID = '" + HID.Text + "' ", sqlConnection1);
+            using (SqlDataReader reader2 = command2.ExecuteReader())
+            {
+                if (reader2.Read())
+                {
+                    //     Console.WriteLine(String.Format("{0}", reader2["HID"]));
+                    lb_IndILokaleholdfordeling.Text = "Er indsat";
+                }
+                else
+                {
+                    lb_IndILokaleholdfordeling.Text = "Mangler";
+                }
+            }
+
+
+            sqlConnection1.Close();
+
+        }
+
+        private void Ind_I_Traenerhold_Click(object sender, EventArgs e)
+        {
+            System.Data.SqlClient.SqlConnection sqlConnection1 = new System.Data.SqlClient.SqlConnection("server=sql.metalogic.dk; database=USGKontor;Persist Security Info=True;User ID=usgkontor;Password=1hihh1hihh");
+            System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand();
+            sqlConnection1.Open();
+            char[] delimiterChars = { ' ', ',', '.', ':', '\t','/' };
+            foreach (DataGridViewRow row in dataGridView5.Rows)
+            {
+
+                if (row.Cells["HoldKode"].Value == null)
+                { }
+                else
+                {
+                    var a = (row.Cells["Tnr"].Value).ToString();
+                    string[] tnrary = (row.Cells["tnr"].Value).ToString().Split(delimiterChars);
+                    int b = tnrary.Length;
+
+                    foreach (string t in tnrary)
+                    {
+
+                        SqlCommand command2 = new SqlCommand("SELECT HID AS HID FROM USGkontor.trænerhold Where HID = '" + HID.Text + "' AND nr = '" + t + "' ", sqlConnection1);
+                        using (SqlDataReader reader2 = command2.ExecuteReader())
+                        {
+                            if (reader2.Read())
+                            {
+
+                            }
+                            else
+                            {
+                                reader2.Close();
+                                cmd.CommandText = "INSERT USGKontor.TrænerHold (Nr, Holdkode, HID) " +
+                                " VALUES('" + t + "', '" + row.Cells["HoldKode"].Value + "', '" + HID.Text + "') ";
+
+                                cmd.Connection = sqlConnection1;
+                                cmd.ExecuteNonQuery();
+                            }
+                        }
+
+                        SqlCommand command3 = new SqlCommand("SELECT HID AS HID FROM USGkontor.TrænerHold Where HID = '" + HID.Text + "' ", sqlConnection1);
+                        using (SqlDataReader reader2 = command3.ExecuteReader())
+                        {
+                            if (reader2.Read())
+                            {
+                                //     Console.WriteLine(String.Format("{0}", reader2["HID"]));
+                                lb_traenerhold.Text = "Er indsat";
+                            }
+                            else
+                            {
+                                lb_traenerhold.Text = "Mangler";
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            sqlConnection1.Close();
+        }
+
+        private void Inf_I_LinkHoldHoldType_Click(object sender, EventArgs e)
+        {
+
+            System.Data.SqlClient.SqlConnection sqlConnection1 = new System.Data.SqlClient.SqlConnection("server=sql.metalogic.dk; database=USGKontor;Persist Security Info=True;User ID=usgkontor;Password=1hihh1hihh");
+            System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand();
+            sqlConnection1.Open();
+
+            cmd.CommandText = "INSERT USGKontor.linkholdholdtype (HID, HoldtypeID) " +
+                    " VALUES('" + HID.Text + "', '" + holdtypeID.Text + "') ";
+
+                cmd.Connection = sqlConnection1;
+                cmd.ExecuteNonQuery();
+
+
+                SqlCommand command4 = new SqlCommand("SELECT HID AS HID FROM USGkontor.linkholdholdtype Where HID = '" + HID.Text + "' ", sqlConnection1);
+                using (SqlDataReader reader2 = command4.ExecuteReader())
+                {
+                    if (reader2.Read())
+                    {
+                        //     Console.WriteLine(String.Format("{0}", reader2["HID"]));
+                        lb_linkholdholdtype.Text = "Er indsat";
+                    }
+                    else
+                    {
+                        lb_linkholdholdtype.Text = "Mangler";
+                    }
+                }
+
+            sqlConnection1.Close();
+
+
+        }
+
         
        
         }
     }
 
+                  

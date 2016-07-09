@@ -129,6 +129,14 @@
             this.label45 = new System.Windows.Forms.Label();
             this.label48 = new System.Windows.Forms.Label();
             this.label49 = new System.Windows.Forms.Label();
+            this.Ind_I_hold = new System.Windows.Forms.Button();
+            this.Ind_I_LokaleHoldFordeling = new System.Windows.Forms.Button();
+            this.Ind_I_Traenerhold = new System.Windows.Forms.Button();
+            this.Inf_I_LinkHoldHoldType = new System.Windows.Forms.Button();
+            this.lb_IndIHold = new System.Windows.Forms.Label();
+            this.lb_IndILokaleholdfordeling = new System.Windows.Forms.Label();
+            this.lb_traenerhold = new System.Windows.Forms.Label();
+            this.lb_linkholdholdtype = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
@@ -138,11 +146,11 @@
             // 
             // InsertIntoDB
             // 
-            this.InsertIntoDB.Location = new System.Drawing.Point(366, 310);
+            this.InsertIntoDB.Location = new System.Drawing.Point(461, 143);
             this.InsertIntoDB.Name = "InsertIntoDB";
-            this.InsertIntoDB.Size = new System.Drawing.Size(75, 23);
+            this.InsertIntoDB.Size = new System.Drawing.Size(91, 23);
             this.InsertIntoDB.TabIndex = 0;
-            this.InsertIntoDB.Text = "Indsæt";
+            this.InsertIntoDB.Text = "Næste hold";
             this.InsertIntoDB.UseVisualStyleBackColor = true;
             this.InsertIntoDB.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -892,9 +900,9 @@
             // dataGridView2
             // 
             this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView2.Location = new System.Drawing.Point(446, 20);
+            this.dataGridView2.Location = new System.Drawing.Point(1325, 20);
             this.dataGridView2.Name = "dataGridView2";
-            this.dataGridView2.Size = new System.Drawing.Size(904, 141);
+            this.dataGridView2.Size = new System.Drawing.Size(25, 141);
             this.dataGridView2.TabIndex = 120;
             this.dataGridView2.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView2_CellContentClick);
             // 
@@ -991,11 +999,95 @@
             this.label49.TabIndex = 131;
             this.label49.Text = "Til trænerhold";
             // 
+            // Ind_I_hold
+            // 
+            this.Ind_I_hold.Location = new System.Drawing.Point(461, 15);
+            this.Ind_I_hold.Name = "Ind_I_hold";
+            this.Ind_I_hold.Size = new System.Drawing.Size(75, 23);
+            this.Ind_I_hold.TabIndex = 132;
+            this.Ind_I_hold.Text = "Ind i hold";
+            this.Ind_I_hold.UseVisualStyleBackColor = true;
+            this.Ind_I_hold.Click += new System.EventHandler(this.Ind_I_hold_Click);
+            // 
+            // Ind_I_LokaleHoldFordeling
+            // 
+            this.Ind_I_LokaleHoldFordeling.Location = new System.Drawing.Point(461, 44);
+            this.Ind_I_LokaleHoldFordeling.Name = "Ind_I_LokaleHoldFordeling";
+            this.Ind_I_LokaleHoldFordeling.Size = new System.Drawing.Size(155, 23);
+            this.Ind_I_LokaleHoldFordeling.TabIndex = 133;
+            this.Ind_I_LokaleHoldFordeling.Text = "Ind I LokaleHoldFordeling";
+            this.Ind_I_LokaleHoldFordeling.UseVisualStyleBackColor = true;
+            this.Ind_I_LokaleHoldFordeling.Click += new System.EventHandler(this.Ind_I_LokaleHoldFordeling_Click);
+            // 
+            // Ind_I_Traenerhold
+            // 
+            this.Ind_I_Traenerhold.Location = new System.Drawing.Point(461, 73);
+            this.Ind_I_Traenerhold.Name = "Ind_I_Traenerhold";
+            this.Ind_I_Traenerhold.Size = new System.Drawing.Size(91, 23);
+            this.Ind_I_Traenerhold.TabIndex = 134;
+            this.Ind_I_Traenerhold.Text = "Traenerhold";
+            this.Ind_I_Traenerhold.UseVisualStyleBackColor = true;
+            this.Ind_I_Traenerhold.Click += new System.EventHandler(this.Ind_I_Traenerhold_Click);
+            // 
+            // Inf_I_LinkHoldHoldType
+            // 
+            this.Inf_I_LinkHoldHoldType.Location = new System.Drawing.Point(461, 102);
+            this.Inf_I_LinkHoldHoldType.Name = "Inf_I_LinkHoldHoldType";
+            this.Inf_I_LinkHoldHoldType.Size = new System.Drawing.Size(123, 23);
+            this.Inf_I_LinkHoldHoldType.TabIndex = 135;
+            this.Inf_I_LinkHoldHoldType.Text = "LinkHoldHoldType";
+            this.Inf_I_LinkHoldHoldType.UseVisualStyleBackColor = true;
+            this.Inf_I_LinkHoldHoldType.Click += new System.EventHandler(this.Inf_I_LinkHoldHoldType_Click);
+            // 
+            // lb_IndIHold
+            // 
+            this.lb_IndIHold.AutoSize = true;
+            this.lb_IndIHold.Location = new System.Drawing.Point(663, 20);
+            this.lb_IndIHold.Name = "lb_IndIHold";
+            this.lb_IndIHold.Size = new System.Drawing.Size(48, 13);
+            this.lb_IndIHold.TabIndex = 136;
+            this.lb_IndIHold.Text = "Er indsat";
+            // 
+            // lb_IndILokaleholdfordeling
+            // 
+            this.lb_IndILokaleholdfordeling.AutoSize = true;
+            this.lb_IndILokaleholdfordeling.Location = new System.Drawing.Point(664, 53);
+            this.lb_IndILokaleholdfordeling.Name = "lb_IndILokaleholdfordeling";
+            this.lb_IndILokaleholdfordeling.Size = new System.Drawing.Size(48, 13);
+            this.lb_IndILokaleholdfordeling.TabIndex = 137;
+            this.lb_IndILokaleholdfordeling.Text = "Er indsat";
+            // 
+            // lb_traenerhold
+            // 
+            this.lb_traenerhold.AutoSize = true;
+            this.lb_traenerhold.Location = new System.Drawing.Point(664, 82);
+            this.lb_traenerhold.Name = "lb_traenerhold";
+            this.lb_traenerhold.Size = new System.Drawing.Size(48, 13);
+            this.lb_traenerhold.TabIndex = 138;
+            this.lb_traenerhold.Text = "Er indsat";
+            // 
+            // lb_linkholdholdtype
+            // 
+            this.lb_linkholdholdtype.AutoSize = true;
+            this.lb_linkholdholdtype.Location = new System.Drawing.Point(664, 109);
+            this.lb_linkholdholdtype.Name = "lb_linkholdholdtype";
+            this.lb_linkholdholdtype.Size = new System.Drawing.Size(48, 13);
+            this.lb_linkholdholdtype.TabIndex = 139;
+            this.lb_linkholdholdtype.Text = "Er indsat";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1362, 808);
+            this.Controls.Add(this.lb_linkholdholdtype);
+            this.Controls.Add(this.lb_traenerhold);
+            this.Controls.Add(this.lb_IndILokaleholdfordeling);
+            this.Controls.Add(this.lb_IndIHold);
+            this.Controls.Add(this.Inf_I_LinkHoldHoldType);
+            this.Controls.Add(this.Ind_I_Traenerhold);
+            this.Controls.Add(this.Ind_I_LokaleHoldFordeling);
+            this.Controls.Add(this.Ind_I_hold);
             this.Controls.Add(this.label49);
             this.Controls.Add(this.label48);
             this.Controls.Add(this.label45);
@@ -1213,6 +1305,14 @@
         private System.Windows.Forms.Label label45;
         private System.Windows.Forms.Label label48;
         private System.Windows.Forms.Label label49;
+        private System.Windows.Forms.Button Ind_I_hold;
+        private System.Windows.Forms.Button Ind_I_LokaleHoldFordeling;
+        private System.Windows.Forms.Button Ind_I_Traenerhold;
+        private System.Windows.Forms.Button Inf_I_LinkHoldHoldType;
+        private System.Windows.Forms.Label lb_IndIHold;
+        private System.Windows.Forms.Label lb_IndILokaleholdfordeling;
+        private System.Windows.Forms.Label lb_traenerhold;
+        private System.Windows.Forms.Label lb_linkholdholdtype;
     }
 }
 
