@@ -860,6 +860,7 @@ namespace OpretHold
                 row1["Holdtype"] = row1["Holdtype"].ToString().TrimStart();
                 row1["HoldtypeID"] = row1["HoldtypeID"].ToString().TrimEnd();
                 row1["HoldtypeID"] = row1["HoldtypeID"].ToString().TrimStart();
+
             }
 
             //----------- Fjern whitespace fra front og bag SLUT
@@ -1464,7 +1465,7 @@ namespace OpretHold
                 else
                 {
 
-                    SqlCommand command3 = new SqlCommand("SELECT HID AS HID FROM USGkontor.LokaleHoldfordeling Where HID = '" + HID.Text + "' AND LokaleKode = '" + row.Cells["LokaleKode"].Value + "' ", sqlConnection1);
+                    SqlCommand command3 = new SqlCommand("SELECT HID AS HID FROM USGkontor.LokaleHoldfordeling Where HID = '" + HID.Text + "' AND LokaleKode = '" + row.Cells["LokaleKode"].Value + "' AND LokaleKode = '" + row.Cells["Ugedag"].Value + "' ", sqlConnection1);
                      using (SqlDataReader reader2 = command3.ExecuteReader())
                      {
                          if (reader2.Read())
