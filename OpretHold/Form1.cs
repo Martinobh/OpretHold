@@ -829,40 +829,47 @@ namespace OpretHold
 
             //----------- Fjern whitespace fra front og bag START
 
+            int aaa = 0;
 
-            foreach (DataRow row1 in DBHold.Tables[0].Rows)
+            try
             {
-                row1["Holdkode"] = row1["Holdkode"].ToString().TrimEnd();
-                row1["Holdkode"] = row1["Holdkode"].ToString().TrimStart();
-                row1["Holdpladser"] = row1["Holdpladser"].ToString().TrimEnd();
-                row1["Holdpladser"] = row1["Holdpladser"].ToString().TrimStart();
-                row1["Køn"] = row1["Køn"].ToString().TrimEnd();
-                row1["Køn"] = row1["Køn"].ToString().TrimStart();
-                row1["Medlemsgebyr"] = row1["Medlemsgebyr"].ToString().TrimEnd();
-                row1["Medlemsgebyr"] = row1["Medlemsgebyr"].ToString().TrimStart();
-                row1["trænerpris"] = row1["trænerpris"].ToString().TrimEnd();
-                row1["trænerpris"] = row1["trænerpris"].ToString().TrimStart();
-                row1["budgetteret"] = row1["budgetteret"].ToString().TrimEnd();
-                row1["budgetteret"] = row1["budgetteret"].ToString().TrimStart();
-                row1["trænere pr gang"] = row1["trænere pr gang"].ToString().TrimEnd();
-                row1["trænere pr gang"] = row1["trænere pr gang"].ToString().TrimStart();
-                row1["antal træninger"] = row1["antal træninger"].ToString().TrimEnd();
-                row1["antal træninger"] = row1["antal træninger"].ToString().TrimStart();
-                row1["Procent ikke stud"] = row1["Procent ikke stud"].ToString().TrimEnd();
-                row1["Procent ikke stud"] = row1["Procent ikke stud"].ToString().TrimStart();
-                row1["admingebyr"] = row1["admingebyr"].ToString().TrimEnd();
-                row1["admingebyr"] = row1["admingebyr"].ToString().TrimStart();
-                row1["sportsgren"] = row1["sportsgren"].ToString().TrimEnd();
-                row1["sportsgren"] = row1["sportsgren"].ToString().TrimStart();
-                row1["VID"] = row1["VID"].ToString().TrimEnd();
-                row1["VID"] = row1["VID"].ToString().TrimStart();
-                row1["Holdtype"] = row1["Holdtype"].ToString().TrimEnd();
-                row1["Holdtype"] = row1["Holdtype"].ToString().TrimStart();
-                row1["HoldtypeID"] = row1["HoldtypeID"].ToString().TrimEnd();
-                row1["HoldtypeID"] = row1["HoldtypeID"].ToString().TrimStart();
+                foreach (DataRow row1 in DBHold.Tables[0].Rows)
+                {
+                    row1["Holdkode"] = row1["Holdkode"].ToString().TrimEnd();
+                    row1["Holdkode"] = row1["Holdkode"].ToString().TrimStart();
+                    row1["Holdpladser"] = row1["Holdpladser"].ToString().TrimEnd();
+                    row1["Holdpladser"] = row1["Holdpladser"].ToString().TrimStart();
+                    row1["Køn"] = row1["Køn"].ToString().TrimEnd();
+                    row1["Køn"] = row1["Køn"].ToString().TrimStart();
+                    row1["Medlemsgebyr"] = row1["Medlemsgebyr"].ToString().TrimEnd();
+                    row1["Medlemsgebyr"] = row1["Medlemsgebyr"].ToString().TrimStart();
+                    row1["trænerpris"] = row1["trænerpris"].ToString().TrimEnd();
+                    row1["trænerpris"] = row1["trænerpris"].ToString().TrimStart();
+                    row1["budgetteret"] = row1["budgetteret"].ToString().TrimEnd();
+                    row1["budgetteret"] = row1["budgetteret"].ToString().TrimStart();
+                    row1["trænere pr gang"] = row1["trænere pr gang"].ToString().TrimEnd();
+                    row1["trænere pr gang"] = row1["trænere pr gang"].ToString().TrimStart();
+                    row1["antal træninger"] = row1["antal træninger"].ToString().TrimEnd();
+                    row1["antal træninger"] = row1["antal træninger"].ToString().TrimStart();
+                    row1["Procent ikke stud"] = row1["Procent ikke stud"].ToString().TrimEnd();
+                    row1["Procent ikke stud"] = row1["Procent ikke stud"].ToString().TrimStart();
+                    row1["admingebyr"] = row1["admingebyr"].ToString().TrimEnd();
+                    row1["admingebyr"] = row1["admingebyr"].ToString().TrimStart();
+                    row1["sportsgren"] = row1["sportsgren"].ToString().TrimEnd();
+                    row1["sportsgren"] = row1["sportsgren"].ToString().TrimStart();
+                    row1["VID"] = row1["VID"].ToString().TrimEnd();
+                    row1["VID"] = row1["VID"].ToString().TrimStart();
+                    row1["Holdtype"] = row1["Holdtype"].ToString().TrimEnd();
+                    row1["Holdtype"] = row1["Holdtype"].ToString().TrimStart();
+                    row1["HoldtypeID"] = row1["HoldtypeID"].ToString().TrimEnd();
+                    row1["HoldtypeID"] = row1["HoldtypeID"].ToString().TrimStart();
 
+                }
             }
-
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: '{0}'", ex);
+            }
             //----------- Fjern whitespace fra front og bag SLUT
 
             DataTable HoldTemp2 = DBHold.Tables[0].Copy();
@@ -886,43 +893,46 @@ namespace OpretHold
             OleDbDataAdapter da = new OleDbDataAdapter(cmd);
             da.Fill(LokaleHoldFordeling);
 
-            foreach (DataRow row2 in LokaleHoldFordeling.Tables[0].Rows)
+            try
             {
-                row2["Holdkode"] = row2["Holdkode"].ToString().TrimEnd();
-                row2["Holdkode"] = row2["Holdkode"].ToString().TrimStart();
-                row2["Trænernavn"] = row2["Trænernavn"].ToString().TrimEnd();
-                row2["Trænernavn"] = row2["Trænernavn"].ToString().TrimStart();
-                row2["LokaleKode"] = row2["LokaleKode"].ToString().TrimEnd();
-                row2["LokaleKode"] = row2["LokaleKode"].ToString().TrimStart();
-                row2["Ugedag"] = row2["Ugedag"].ToString().TrimEnd();
-                row2["Ugedag"] = row2["Ugedag"].ToString().TrimStart();
-                row2["Starttid"] = row2["Starttid"].ToString().TrimEnd();
-                row2["Starttid"] = row2["Starttid"].ToString().TrimStart();
-                row2["Sluttid"] = row2["Sluttid"].ToString().TrimEnd();
-                row2["Sluttid"] = row2["Sluttid"].ToString().TrimStart();
-                row2["Startdato"] = row2["Startdato"].ToString().TrimEnd();
-                row2["Startdato"] = row2["Startdato"].ToString().TrimStart();
-                row2["Slutdato"] = row2["Slutdato"].ToString().TrimEnd();
-                row2["Slutdato"] = row2["Slutdato"].ToString().TrimStart();
-                row2["Holdnavn"] = row2["Holdnavn"].ToString().TrimEnd();
-                row2["Holdnavn"] = row2["Holdnavn"].ToString().TrimStart();
-                row2["Niveau"] = row2["Niveau"].ToString().TrimEnd();
-                row2["Niveau"] = row2["Niveau"].ToString().TrimStart();
-                row2["Periode"] = row2["Periode"].ToString().TrimEnd();
-                row2["Periode"] = row2["Periode"].ToString().TrimStart();
-                row2["Gebyr"] = row2["Gebyr"].ToString().TrimEnd();
-                row2["Gebyr"] = row2["Gebyr"].ToString().TrimStart();
-                row2["Ej stud"] = row2["Ej stud"].ToString().TrimEnd();
-                row2["Ej stud"] = row2["Ej stud"].ToString().TrimStart();
-                row2["Bemærkninger"] = row2["Bemærkninger"].ToString().TrimEnd();
-                row2["Bemærkninger"] = row2["Bemærkninger"].ToString().TrimStart();
-                row2["Tnr"] = row2["Tnr"].ToString().TrimEnd();
-                row2["Tnr"] = row2["Tnr"].ToString().TrimStart();
+
+                foreach (DataRow row2 in LokaleHoldFordeling.Tables[0].Rows)
+                {
+                    row2["Holdkode"] = row2["Holdkode"].ToString().TrimEnd();
+                    row2["Holdkode"] = row2["Holdkode"].ToString().TrimStart();
+                    row2["Trænernavn"] = row2["Trænernavn"].ToString().TrimEnd();
+                    row2["Trænernavn"] = row2["Trænernavn"].ToString().TrimStart();
+                    row2["LokaleKode"] = row2["LokaleKode"].ToString().TrimEnd();
+                    row2["LokaleKode"] = row2["LokaleKode"].ToString().TrimStart();
+                    row2["Ugedag"] = row2["Ugedag"].ToString().TrimEnd();
+                    row2["Ugedag"] = row2["Ugedag"].ToString().TrimStart();
+                    row2["Starttid"] = row2["Starttid"].ToString().TrimEnd();
+                    row2["Starttid"] = row2["Starttid"].ToString().TrimStart();
+                    row2["Sluttid"] = row2["Sluttid"].ToString().TrimEnd();
+                    row2["Sluttid"] = row2["Sluttid"].ToString().TrimStart();
+                    row2["Startdato"] = row2["Startdato"].ToString().TrimEnd();
+                    row2["Startdato"] = row2["Startdato"].ToString().TrimStart();
+                    row2["Slutdato"] = row2["Slutdato"].ToString().TrimEnd();
+                    row2["Slutdato"] = row2["Slutdato"].ToString().TrimStart();
+                    row2["Holdnavn"] = row2["Holdnavn"].ToString().TrimEnd();
+                    row2["Holdnavn"] = row2["Holdnavn"].ToString().TrimStart();
+                    row2["Niveau"] = row2["Niveau"].ToString().TrimEnd();
+                    row2["Niveau"] = row2["Niveau"].ToString().TrimStart();
+                    row2["Periode"] = row2["Periode"].ToString().TrimEnd();
+                    row2["Periode"] = row2["Periode"].ToString().TrimStart();
+                    // row2["Gebyr"] = row2["Gebyr"].ToString().TrimEnd();
+                    // row2["Gebyr"] = row2["Gebyr"].ToString().TrimStart();
+                    // row2["Ej stud"] = row2["Ej stud"].ToString().TrimEnd();
+                    // row2["Ej stud"] = row2["Ej stud"].ToString().TrimStart();
+                    row2["Bemærkninger"] = row2["Bemærkninger"].ToString().TrimEnd();
+                    row2["Bemærkninger"] = row2["Bemærkninger"].ToString().TrimStart();
+                    row2["Tnr"] = row2["Tnr"].ToString().TrimEnd();
+                    row2["Tnr"] = row2["Tnr"].ToString().TrimStart();
 
 
-                //--------------------------- Tjek om træner eksisterer start
-                    char[] delimiterChars = { ' ', ',', '.', ':', '\t','/' };
-                    
+                    //--------------------------- Tjek om træner eksisterer start
+                    char[] delimiterChars = { ' ', ',', '.', ':', '\t', '/' };
+
                     string[] tnrary = (row2["tnr"].ToString()).Split(delimiterChars);
                     int b = tnrary.Length;
 
@@ -936,7 +946,9 @@ namespace OpretHold
                         {
 
                             if (reader3.Read())
-                            { }
+                            {
+                                //     MessageBox.Show(t.ToString()); 
+                            }
                             else
                             {
                                 MessageBox.Show("Der er fejl i træner for " + t.ToString());
@@ -944,14 +956,19 @@ namespace OpretHold
                         }
                     }
                     conn10.Close();
-                //--------------------------- Tjek om træner eksisterer slut
+                    //--------------------------- Tjek om træner eksisterer slut
 
 
 
 
 
+                }
             }
-
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: '{0}'", ex);
+            }
+            
 
         //    dataGridView1.DataSource = LokaleHoldFordeling.Tables[0];
            
@@ -975,8 +992,11 @@ namespace OpretHold
             SqlConnection conn1 = new SqlConnection("server=sql.metalogic.dk; database=USGKontor;Persist Security Info=True;User ID=usgkontor;Password=1hihh1hihh");
             conn1.Open();
 
+            MessageBox.Show(LokaleHoldFordeling.Tables[0].Rows.Count.ToString());
+
             foreach (DataRow row in LokaleHoldFordeling.Tables[0].Rows)
             {
+             //   MessageBox.Show(row["Lokalekode"].ToString().ToString());
                 SqlCommand commandTjekdata = new SqlCommand("SELECT Lokalekode FROM USGkontor.Lokaler WHERE Lokalekode = '" + row["Lokalekode"].ToString() + "' ", conn1);
                 using (SqlDataReader reader3 = commandTjekdata.ExecuteReader())
                 {
@@ -1064,7 +1084,7 @@ namespace OpretHold
                    DataSet SelectedData5 = new DataSet();
                    SelectedData5.Tables.Add(result3);*/
           //  TabelTilTraenere.Columns.Remove("trænernavn");
-            TabelTilTraenere.Columns.Remove("niveau");
+            TabelTilTraenere.Columns.Remove("Niveau");
             TabelTilTraenere.Columns.Remove("gebyr");
             TabelTilTraenere.Columns.Remove("Ej stud");
           //  TabelTilTraenere.Columns.Remove("tnr");
@@ -1475,6 +1495,13 @@ namespace OpretHold
                          else
                          {
                              reader2.Close();
+
+                      //       MessageBox.Show(row.Cells["Starttid"].Value.ToString());
+                      //       MessageBox.Show(row.Cells["Sluttid"].Value.ToString());
+                      //       MessageBox.Show(((DateTime)row.Cells["Starttid"].Value).ToShortTimeString());
+                      //       MessageBox.Show(((DateTime)row.Cells["Sluttid"].Value).ToShortTimeString());
+                      //       MessageBox.Show(DateTime.ParseExact(((DateTime)row.Cells["StartDato"].Value).ToShortDateString(), "dd/MM/yyyy", null).ToString("MM/dd/yyyy"));
+                      //       MessageBox.Show(DateTime.ParseExact(((DateTime)row.Cells["SlutDato"].Value).ToShortDateString(), "dd/MM/yyyy", null).ToString("MM/dd/yyyy"));
                              cmd.CommandText = "INSERT USGKontor.LokaleHoldfordeling (LokaleKode, Holdkode, Ugedag, Starttid, Sluttid, Startdato, Slutdato, HID, Periode, Fritraening) " +                                                                                                                                                                                                                                                    //  DateTime.ParseExact(dateTimeString, "dd/MM/yyyy", null).ToString("MM/dd/yyyy")                                                              
                                  " VALUES('" + row.Cells["LokaleKode"].Value + "', '" + row.Cells["Holdkode"].Value + "', '" + row.Cells["Ugedag"].Value + "', '" + ((DateTime)row.Cells["Starttid"].Value).ToShortTimeString() + "', '" + ((DateTime)row.Cells["Sluttid"].Value).ToShortTimeString() + "', '" + DateTime.ParseExact(((DateTime)row.Cells["StartDato"].Value).ToShortDateString(), "dd/MM/yyyy", null).ToString("MM/dd/yyyy") + "', '" + DateTime.ParseExact(((DateTime)row.Cells["SlutDato"].Value).ToShortDateString(), "dd/MM/yyyy", null).ToString("MM/dd/yyyy") + "', '" + HID.Text + "', '" + row.Cells["Periode"].Value + "', '" + row.Cells["Fritraening"].Value + "')";
 
@@ -1516,10 +1543,6 @@ namespace OpretHold
             char[] delimiterChars = { ' ', ',', '.', ':', '\t','/' };
             foreach (DataGridViewRow row in dataGridView5.Rows)
             {
-
-
-
-
 
                 if (row.Cells["HoldKode"].Value == null)
                 { }
